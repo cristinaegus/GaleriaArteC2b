@@ -11,3 +11,4 @@ six==1.16.0
 SQLAlchemy==2.0.23
 typing_extensions==4.8.0
 tzdata==2023.3
+PyPDF2==3.0.1

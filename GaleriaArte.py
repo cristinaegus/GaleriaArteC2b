@@ -1,5 +1,10 @@
-import psycopg2
+# GaleriaArte.py
+
+
 from connection import get_connection
+
+# URL de conexión para SQLAlchemy
+DATABASE_URL = "postgresql+psycopg2://GaleriaArte_owner:npg_EK2uSIDJr3OG@ep-mute-sea-a2d5a91w-pooler.eu-central-1.aws.neon.tech:5432/GaleriaArte?sslmode=require"
 
 # Conexión a la base de datos PostgreSQL en Neon
 conn = get_connection()
