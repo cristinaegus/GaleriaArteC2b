@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Gestión Galería de Arte</title>
+    <link rel="stylesheet" href="/static/GaleriaCris.css" />
+  </head>
+  <body>
+    <header>
+      <h1>Gestión de Galería de Arte</h1>
+      <nav>
+        <button class="tab-btn" onclick="showTab('clientes')">Clientes</button>
+        <button class="tab-btn" onclick="showTab('agentes')">Agentes</button>
+        <button class="tab-btn" onclick="showTab('obras')">Obras</button>
+        <button class="tab-btn" onclick="showTab('ventas')">Ventas</button>
+      </nav>
+    </header>
+    <main>
+      <section id="clientes" class="tab-content">
+        <h2>Clientes</h2>
+        <form id="formCliente">
+          <input
+            type="text"
+            name="nombre"
+            placeholder="Nombre"
+            title="Nombre del cliente"
+            required
+          />
+          <input
+            type="email"
+            name="email"
+            placeholder="Email"
+            title="Correo electrónico del cliente"
+            required
+          />
+          <input
+            type="text"
+            name="telefono"
+            placeholder="Teléfono"
+            title="Teléfono del cliente"
+            required
+          />
+          <input
+            type="text"
+            name="direccion"
+            placeholder="Dirección"
+            title="Dirección del cliente"
+            required
+          />
+          <button type="submit">Agregar Cliente</button>
+        </form>
+        <div id="clientesMsg" class="msg"></div>
+        <table id="tablaClientes">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Nombre</th>
+              <th>Email</th>
+              <th>Teléfono</th>
+              <th>Dirección</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </section>
+      <section id="agentes" class="tab-content">
+        <h2>Agentes</h2>
+        <form id="formAgente">
+          <input
+            type="text"
+            name="nombre"
+            placeholder="Nombre"
+            title="Nombre del agente"
+            required
+          />
+          <input
+            type="email"
+            name="email"
+            placeholder="Email"
+            title="Correo electrónico del agente"
+            required
+          />
+          <input
+            type="text"
+            name="telefono"
+            placeholder="Teléfono"
+            title="Teléfono del agente"
+            required
+          />
+          <input
+            type="text"
+            name="direccion"
+            placeholder="Dirección"
+            title="Dirección del agente"
+            required
+          />
+          <button type="submit">Agregar Agente</button>
+        </form>
+        <div id="agentesMsg" class="msg"></div>
+        <table id="tablaAgentes">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Nombre</th>
+              <th>Email</th>
+              <th>Teléfono</th>
+              <th>Dirección</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </section>
+      <section id="obras" class="tab-content">
+        <h2>Obras</h2>
+        <form id="formObra">
+          <input
+            type="text"
+            name="titulo"
+            placeholder="Título"
+            title="Título de la obra"
+            required
+          />
+          <input
+            type="text"
+            name="artista"
+            placeholder="Artista"
+            title="Artista de la obra"
+            required
+          />
+          <input
+            type="number"
+            name="año"
+            placeholder="Año"
+            title="Año de la obra"
+            required
+          />
+          <input
+            type="text"
+            name="tecnica"
+            placeholder="Técnica"
+            title="Técnica de la obra"
+            required
+          />
+          <input
+            type="number"
+            name="precio"
+            placeholder="Precio"
+            title="Precio de la obra"
+            step="0.01"
+            required
+          />
+          <select name="disponible" title="Disponibilidad de la obra" required>
+            <option value="true">Disponible</option>
+            <option value="false">No disponible</option>
+          </select>
+          <button type="submit">Agregar Obra</button>
+        </form>
+        <div id="obrasMsg" class="msg"></div>
+        <table id="tablaObras">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Título</th>
+              <th>Artista</th>
+              <th>Año</th>
+              <th>Técnica</th>
+              <th>Precio</th>
+              <th>Disponible</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </section>
+      <section id="ventas" class="tab-content">
+        <h2>Ventas</h2>
+        <form id="formVenta">
+          <input
+            type="number"
+            name="id_obra"
+            placeholder="ID Obra"
+            title="ID de la obra vendida"
+            required
+          />
+          <input
+            type="number"
+            name="id_cliente"
+            placeholder="ID Cliente"
+            title="ID del cliente comprador"
+            required
+          />
+          <input
+            type="number"
+            name="id_agente"
+            placeholder="ID Agente"
+            title="ID del agente de la venta"
+            required
+          />
+          <input
+            type="date"
+            name="fecha_venta"
+            placeholder="Fecha de venta"
+            title="Fecha de la venta"
+            required
+          />
+          <input
+            type="number"
+            name="precio_salida"
+            placeholder="Precio Salida"
+            title="Precio de salida"
+            step="0.01"
+            required
+          />
+          <input
+            type="number"
+            name="precio_final"
+            placeholder="Precio Final"
+            title="Precio final de venta"
+            step="0.01"
+            required
+          />
+          <input
+            type="number"
+            name="comision_agente"
+            placeholder="Comisión Agente"
+            title="Comisión del agente"
+            step="0.01"
+            required
+          />
+          <button type="submit">Registrar Venta</button>
+        </form>
+        <div id="ventasMsg" class="msg"></div>
+        <table id="tablaVentas">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>ID Obra</th>
+              <th>ID Cliente</th>
+              <th>ID Agente</th>
+              <th>Fecha</th>
+              <th>Salida</th>
+              <th>Final</th>
+              <th>Comisión</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </section>
+    </main>
+    <footer>
+      <p>&copy; 2025 Galería de Arte</p>
+    </footer>
+    <script src="/static/GaleriaCris.js"></script>
+  </body>
+</html>
