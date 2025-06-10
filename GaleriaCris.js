@@ -333,6 +333,7 @@ if (formVenta) {
 
 async function filtrarVentas() {
   const form = document.getElementById("formVenta");
+  if (!form) return;
   const params = new URLSearchParams();
   [
     "id_venta",
@@ -350,15 +351,38 @@ async function filtrarVentas() {
   const res = await fetch(`${API_URL}/ventas?${params.toString()}`);
   const ventas = await res.json();
   const tbody = document.querySelector("#tablaVentas tbody");
+  if (!tbody) return;
   tbody.innerHTML = "";
   if (Array.isArray(ventas)) {
     ventas.forEach((v) => {
+      let cliente = "";
+      let agente = "";
+      let tituloObra = "";
+      if (window.clientesCache) {
+        const c = window.clientesCache.find(
+          (cli) => cli.id_cliente === v.id_cliente
+        );
+        if (c) cliente = c.nombre;
+      }
+      if (window.agentesCache) {
+        const a = window.agentesCache.find(
+          (ag) => ag.id_agente === v.id_agente
+        );
+        if (a) agente = a.nombre;
+      }
+      if (window.obrasCache) {
+        const o = window.obrasCache.find((ob) => String(ob.id_obra) === String(v.id_obra));
+        if (o) tituloObra = o.titulo;
+      }
       const tr = document.createElement("tr");
       tr.innerHTML = `
             <td>${v.id_venta ?? ""}</td>
             <td>${v.id_obra}</td>
+            <td>${tituloObra}</td>
             <td>${v.id_cliente}</td>
+            <td>${cliente}</td>
             <td>${v.id_agente}</td>
+            <td>${agente}</td>
             <td>${v.fecha_venta}</td>
             <td>${v.precio_salida}</td>
             <td>${v.precio_final}</td>
@@ -366,18 +390,40 @@ async function filtrarVentas() {
         `;
       tbody.appendChild(tr);
     });
-  } else if (ventas.id_venta) {
-    const v = ventas;
+  } else if (ventas && ventas.id_venta) {
+    // Si el backend devuelve un solo objeto
+    let cliente = "";
+    let agente = "";
+    let tituloObra = "";
+    if (window.clientesCache) {
+      const c = window.clientesCache.find(
+        (cli) => cli.id_cliente === ventas.id_cliente
+      );
+      if (c) cliente = c.nombre;
+    }
+    if (window.agentesCache) {
+      const a = window.agentesCache.find(
+        (ag) => ag.id_agente === ventas.id_agente
+      );
+      if (a) agente = a.nombre;
+    }
+    if (window.obrasCache) {
+      const o = window.obrasCache.find((ob) => String(ob.id_obra) === String(ventas.id_obra));
+      if (o) tituloObra = o.titulo;
+    }
     const tr = document.createElement("tr");
     tr.innerHTML = `
-            <td>${v.id_venta ?? ""}</td>
-            <td>${v.id_obra}</td>
-            <td>${v.id_cliente}</td>
-            <td>${v.id_agente}</td>
-            <td>${v.fecha_venta}</td>
-            <td>${v.precio_salida}</td>
-            <td>${v.precio_final}</td>
-            <td>${v.comision_agente}</td>
+            <td>${ventas.id_venta ?? ""}</td>
+            <td>${ventas.id_obra}</td>
+            <td>${tituloObra}</td>
+            <td>${ventas.id_cliente}</td>
+            <td>${cliente}</td>
+            <td>${ventas.id_agente}</td>
+            <td>${agente}</td>
+            <td>${ventas.fecha_venta}</td>
+            <td>${ventas.precio_salida}</td>
+            <td>${ventas.precio_final}</td>
+            <td>${ventas.comision_agente}</td>
         `;
     tbody.appendChild(tr);
   }
@@ -416,7 +462,7 @@ async function cargarVentas() {
       if (a) agente = a.nombre;
     }
     if (window.obrasCache) {
-      const o = window.obrasCache.find((ob) => ob.id_obra === v.id_obra);
+      const o = window.obrasCache.find((ob) => String(ob.id_obra) === String(v.id_obra));
       if (o) tituloObra = o.titulo;
     }
     const tr = document.createElement("tr");
@@ -469,6 +515,98 @@ async function actualizarSelectsVenta() {
   });
 }
 
+// --- Filtrado avanzado por obra en ventas ---
+function crearSelectFiltrarObraVentas() {
+  // Solo en la página de ventas
+  if (!document.getElementById("selectFiltrarObraVentas")) {
+    const contenedor = document.getElementById("contenedorFiltrarObraVentas");
+    if (!contenedor) return;
+    const label = document.createElement("label");
+    label.textContent = "Filtrar ventas por obra: ";
+    label.htmlFor = "selectFiltrarObraVentas";
+    const select = document.createElement("select");
+    select.id = "selectFiltrarObraVentas";
+    select.innerHTML = '<option value="">Seleccione una obra</option>';
+    if (window.obrasCache) {
+      window.obrasCache.forEach((o) => {
+        select.innerHTML += `<option value="${o.id_obra}">${o.titulo} (${o.artista}) [${o.id_obra}]</option>`;
+      });
+    }
+    const btn = document.createElement("button");
+    btn.type = "button";
+    btn.id = "btnFiltrarPorObraVentas";
+    btn.textContent = "Buscar/Filtrar por Obra";
+    btn.onclick = filtrarPorObraEnVentas;
+    contenedor.appendChild(label);
+    contenedor.appendChild(select);
+    contenedor.appendChild(btn);
+    // Crear tabla de resultados si no existe
+    if (!document.getElementById("tablaFiltrarObraVentas")) {
+      const tabla = document.createElement("table");
+      tabla.id = "tablaFiltrarObraVentas";
+      tabla.innerHTML = `
+        <thead><tr>
+          <th>ID Obra</th><th>Título</th><th>Artista</th><th>Comprador</th><th>Agente</th><th>Fecha</th><th>Precio salida</th>
+        </tr></thead>
+        <tbody></tbody>
+      `;
+      contenedor.appendChild(tabla);
+    }
+  }
+}
+
+async function filtrarPorObraEnVentas() {
+  const select = document.getElementById("selectFiltrarObraVentas");
+  const idObra = select ? select.value : "";
+  const tbody = document.querySelector("#tablaFiltrarObraVentas tbody");
+  if (!idObra || !tbody) {
+    tbody &&
+      (tbody.innerHTML = "<tr><td colspan='7'>Seleccione una obra</td></tr>");
+    return;
+  }
+  // Buscar ventas de esa obra
+  const res = await fetch(`${API_URL}/ventas?id_obra=${idObra}`);
+  const ventas = await res.json();
+  tbody.innerHTML = "";
+  let ventasArr = Array.isArray(ventas)
+    ? ventas
+    : ventas.id_venta
+    ? [ventas]
+    : [];
+  if (ventasArr.length === 0) {
+    tbody.innerHTML =
+      "<tr><td colspan='7'>No hay ventas para esta obra</td></tr>";
+    return;
+  }
+  ventasArr.forEach((v) => {
+    let obra =
+      window.obrasCache &&
+      window.obrasCache.find((o) => o.id_obra === v.id_obra);
+    let cliente =
+      window.clientesCache &&
+      window.clientesCache.find((c) => c.id_cliente === v.id_cliente);
+    let agente =
+      window.agentesCache &&
+      window.agentesCache.find((a) => a.id_agente === v.id_agente);
+    const tr = document.createElement("tr");
+    tr.innerHTML = `
+      <td>${obra ? obra.id_obra : v.id_obra}</td>
+      <td>${obra ? obra.titulo : ""}</td>
+      <td>${obra ? obra.artista : ""}</td>
+      <td>${cliente ? cliente.nombre : v.id_cliente}</td>
+      <td>${agente ? agente.nombre : v.id_agente}</td>
+      <td>${v.fecha_venta}</td>
+      <td>${v.precio_salida}</td>
+    `;
+    tbody.appendChild(tr);
+  });
+}
+
+// Llamar a la creación del select y tabla al cargar ventas
+function inicializarFiltradoPorObraVentas() {
+  crearSelectFiltrarObraVentas();
+}
+
 // Inicializar
 document.addEventListener("DOMContentLoaded", () => {
   cargarClientes();
@@ -476,6 +614,7 @@ document.addEventListener("DOMContentLoaded", () => {
   cargarObras();
   cargarVentas();
   actualizarSelectsVenta(); // Poblar selects al cargar
+  inicializarFiltradoPorObraVentas(); // Nuevo: inicializar filtrado por obra en ventas
   showTab("clientes");
 });
 
@@ -493,4 +632,89 @@ function showTab(tab) {
   const idx = ["clientes", "agentes", "obras", "ventas"].indexOf(tab);
   if (idx >= 0)
     document.querySelectorAll(".tab-btn")[idx].classList.add("active");
+}
+
+// --- Filtrado específico por obra en ventas ---
+async function filtrarPorObraEnVentas() {
+  const selectObra = document.getElementById("selectObra");
+  if (!selectObra || !selectObra.value) {
+    alert("Seleccione una obra para filtrar.");
+    return;
+  }
+  const idObra = selectObra.value;
+  // Buscar ventas de esa obra
+  const res = await fetch(`${API_URL}/ventas?id_obra=${idObra}`);
+  const ventas = await res.json();
+  // Buscar info de la obra
+  const obra = window.obrasCache?.find((o) => o.id_obra == idObra);
+  // Limpiar tabla previa si existe
+  let tablaDetalle = document.getElementById("tablaDetalleObraVenta");
+  if (tablaDetalle) tablaDetalle.remove();
+  // Crear tabla nueva
+  tablaDetalle = document.createElement("table");
+  tablaDetalle.id = "tablaDetalleObraVenta";
+  tablaDetalle.className = "tabla-detalle-obra";
+  let html = `<thead><tr><th>ID Obra</th><th>Título</th><th>Artista</th><th>Año</th><th>Técnica</th><th>Precio salida</th><th>Comprador</th><th>Agente</th><th>Fecha venta</th></tr></thead><tbody>`;
+  if (Array.isArray(ventas) && ventas.length > 0) {
+    ventas.forEach((v) => {
+      const cliente = window.clientesCache?.find(
+        (c) => c.id_cliente === v.id_cliente
+      );
+      const agente = window.agentesCache?.find(
+        (a) => a.id_agente === v.id_agente
+      );
+      html += `<tr>
+        <td>${obra?.id_obra ?? v.id_obra}</td>
+        <td>${obra?.titulo ?? ""}</td>
+        <td>${obra?.artista ?? ""}</td>
+        <td>${obra?.año ?? ""}</td>
+        <td>${obra?.tecnica ?? ""}</td>
+        <td>${v.precio_salida}</td>
+        <td>${cliente ? cliente.nombre : v.id_cliente}</td>
+        <td>${agente ? agente.nombre : v.id_agente}</td>
+        <td>${v.fecha_venta}</td>
+      </tr>`;
+    });
+  } else if (ventas && ventas.id_venta) {
+    const v = ventas;
+    const cliente = window.clientesCache?.find(
+      (c) => c.id_cliente === v.id_cliente
+    );
+    const agente = window.agentesCache?.find(
+      (a) => a.id_agente === v.id_agente
+    );
+    html += `<tr>
+        <td>${obra?.id_obra ?? v.id_obra}</td>
+        <td>${obra?.titulo ?? ""}</td>
+        <td>${obra?.artista ?? ""}</td>
+        <td>${obra?.año ?? ""}</td>
+        <td>${obra?.tecnica ?? ""}</td>
+        <td>${v.precio_salida}</td>
+        <td>${cliente ? cliente.nombre : v.id_cliente}</td>
+        <td>${agente ? agente.nombre : v.id_agente}</td>
+        <td>${v.fecha_venta}</td>
+      </tr>`;
+  } else {
+    html += `<tr><td colspan="9">No hay ventas para esta obra.</td></tr>`;
+  }
+  html += "</tbody>";
+  tablaDetalle.innerHTML = html;
+  // Insertar tabla debajo del formulario de ventas
+  const formVenta = document.getElementById("formVenta");
+  if (formVenta) {
+    formVenta.parentNode.insertBefore(tablaDetalle, formVenta.nextSibling);
+  }
+}
+// Botón para filtrar por obra en ventas (si no existe)
+if (!document.getElementById("btnFiltrarPorObraVenta")) {
+  const formVenta = document.getElementById("formVenta");
+  if (formVenta) {
+    const btn = document.createElement("button");
+    btn.type = "button";
+    btn.id = "btnFiltrarPorObraVenta";
+    btn.textContent = "Buscar/Filtrar por Obra";
+    btn.style.marginLeft = "1em";
+    btn.onclick = filtrarPorObraEnVentas;
+    formVenta.appendChild(btn);
+  }
 }
