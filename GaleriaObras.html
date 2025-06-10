@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Obras - Galería de Arte</title>
+    <link rel="stylesheet" href="/static/GaleriaCris.css" />
+    <style>
+      @import url("/static/GaleriaCris.css");
+    </style>
+  </head>
+  <body>
+    <header>
+      <nav>
+        <a class="tab-btn" href="GaleriaHome.html">Inicio</a>
+        <a class="tab-btn" href="GaleriaClientes.html">Clientes</a>
+        <a class="tab-btn" href="GaleriaAgentes.html">Agentes</a>
+        <a class="tab-btn" href="GaleriaObras.html">Obras</a>
+        <a class="tab-btn" href="GaleriaVentas.html">Ventas</a>
+      </nav>
+      <h1>Obras</h1>
+    </header>
+    <main>
+      <!-- Sección de obras (copiar aquí el contenido de la sección obras de GaleriaCris.html) -->
+      <section id="obras" class="tab-content">
+        <h2>Obras</h2>
+        <form id="formObra">
+          <input
+            type="text"
+            name="titulo"
+            placeholder="Título"
+            title="Título de la obra"
+            required
+          />
+          <input
+            type="text"
+            name="artista"
+            placeholder="Artista"
+            title="Artista de la obra"
+            required
+          />
+          <input
+            type="number"
+            name="año"
+            placeholder="Año"
+            title="Año de la obra"
+            required
+          />
+          <input
+            type="text"
+            name="tecnica"
+            placeholder="Técnica"
+            title="Técnica de la obra"
+            required
+          />
+          <input
+            type="number"
+            name="precio"
+            placeholder="Precio"
+            title="Precio de la obra"
+            step="0.01"
+            required
+          />
+          <select name="disponible" title="Disponibilidad de la obra" required>
+            <option value="true">Disponible</option>
+            <option value="false">No disponible</option>
+          </select>
+          <button type="submit">Agregar Obra</button>
+        </form>
+        <div id="obrasMsg" class="msg"></div>
+        <table id="tablaObras">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Título</th>
+              <th>Artista</th>
+              <th>Año</th>
+              <th>Técnica</th>
+              <th>Precio</th>
+              <th>Disponible</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </section>
+    </main>
+    <footer>
+      <p>&copy; 2025 Galería de Arte</p>
+    </footer>
+    <script src="/static/GaleriaCris.js"></script>
+  </body>
+</html>

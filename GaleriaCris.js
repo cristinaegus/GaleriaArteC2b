@@ -8,16 +8,19 @@ function mostrarSeccion(seccion) {
 }
 
 // --- Clientes ---
-document.getElementById("formCliente").onsubmit = async function (e) {
-  e.preventDefault();
-  const data = Object.fromEntries(new FormData(this));
-  await fetch(`${API_URL}/clientes`, {
-    method: "POST",
-    body: new URLSearchParams(data),
-  });
-  this.reset();
-  cargarClientes();
-};
+const formCliente = document.getElementById("formCliente");
+if (formCliente) {
+  formCliente.onsubmit = async function (e) {
+    e.preventDefault();
+    const data = Object.fromEntries(new FormData(this));
+    await fetch(`${API_URL}/clientes`, {
+      method: "POST",
+      body: new URLSearchParams(data),
+    });
+    this.reset();
+    cargarClientes();
+  };
+}
 
 // Nuevo: función para filtrar clientes usando los campos del formulario
 async function filtrarClientes() {
@@ -68,18 +71,23 @@ async function filtrarClientes() {
 
 // Botón para filtrar clientes (puedes añadirlo en el HTML si lo deseas)
 if (!document.getElementById("btnFiltrarCliente")) {
-  const btn = document.createElement("button");
-  btn.type = "button";
-  btn.id = "btnFiltrarCliente";
-  btn.textContent = "Buscar/Filtrar";
-  btn.onclick = filtrarClientes;
-  document.getElementById("formCliente").appendChild(btn);
+  const form = document.getElementById("formCliente");
+  if (form) {
+    const btn = document.createElement("button");
+    btn.type = "button";
+    btn.id = "btnFiltrarCliente";
+    btn.textContent = "Buscar/Filtrar";
+    btn.onclick = filtrarClientes;
+    form.appendChild(btn);
+  }
 }
 
 async function cargarClientes() {
   const res = await fetch(`${API_URL}/clientes`);
   const clientes = await res.json();
+  window.clientesCache = clientes;
   const tbody = document.querySelector("#tablaClientes tbody");
+  if (!tbody) return; // Evita error si no existe la tabla
   tbody.innerHTML = "";
   clientes.forEach((c) => {
     const tr = document.createElement("tr");
@@ -104,16 +112,19 @@ async function eliminarCliente(id) {
 }
 
 // --- Agentes ---
-document.getElementById("formAgente").onsubmit = async function (e) {
-  e.preventDefault();
-  const data = Object.fromEntries(new FormData(this));
-  await fetch(`${API_URL}/agentes`, {
-    method: "POST",
-    body: new URLSearchParams(data),
-  });
-  this.reset();
-  cargarAgentes();
-};
+const formAgente = document.getElementById("formAgente");
+if (formAgente) {
+  formAgente.onsubmit = async function (e) {
+    e.preventDefault();
+    const data = Object.fromEntries(new FormData(this));
+    await fetch(`${API_URL}/agentes`, {
+      method: "POST",
+      body: new URLSearchParams(data),
+    });
+    this.reset();
+    cargarAgentes();
+  };
+}
 
 async function filtrarAgentes() {
   const form = document.getElementById("formAgente");
@@ -158,18 +169,23 @@ async function filtrarAgentes() {
   }
 }
 if (!document.getElementById("btnFiltrarAgente")) {
-  const btn = document.createElement("button");
-  btn.type = "button";
-  btn.id = "btnFiltrarAgente";
-  btn.textContent = "Buscar/Filtrar";
-  btn.onclick = filtrarAgentes;
-  document.getElementById("formAgente").appendChild(btn);
+  const form = document.getElementById("formAgente");
+  if (form) {
+    const btn = document.createElement("button");
+    btn.type = "button";
+    btn.id = "btnFiltrarAgente";
+    btn.textContent = "Buscar/Filtrar";
+    btn.onclick = filtrarAgentes;
+    form.appendChild(btn);
+  }
 }
 
 async function cargarAgentes() {
   const res = await fetch(`${API_URL}/agentes`);
   const agentes = await res.json();
+  window.agentesCache = agentes;
   const tbody = document.querySelector("#tablaAgentes tbody");
+  if (!tbody) return; // Evita error si no existe la tabla
   tbody.innerHTML = "";
   agentes.forEach((a) => {
     const tr = document.createElement("tr");
@@ -194,16 +210,19 @@ async function eliminarAgente(id) {
 }
 
 // --- Obras ---
-document.getElementById("formObra").onsubmit = async function (e) {
-  e.preventDefault();
-  const data = Object.fromEntries(new FormData(this));
-  await fetch(`${API_URL}/obras`, {
-    method: "POST",
-    body: new URLSearchParams(data),
-  });
-  this.reset();
-  cargarObras();
-};
+const formObra = document.getElementById("formObra");
+if (formObra) {
+  formObra.onsubmit = async function (e) {
+    e.preventDefault();
+    const data = Object.fromEntries(new FormData(this));
+    await fetch(`${API_URL}/obras`, {
+      method: "POST",
+      body: new URLSearchParams(data),
+    });
+    this.reset();
+    cargarObras();
+  };
+}
 
 async function filtrarObras() {
   const form = document.getElementById("formObra");
@@ -254,18 +273,23 @@ async function filtrarObras() {
   }
 }
 if (!document.getElementById("btnFiltrarObra")) {
-  const btn = document.createElement("button");
-  btn.type = "button";
-  btn.id = "btnFiltrarObra";
-  btn.textContent = "Buscar/Filtrar";
-  btn.onclick = filtrarObras;
-  document.getElementById("formObra").appendChild(btn);
+  const form = document.getElementById("formObra");
+  if (form) {
+    const btn = document.createElement("button");
+    btn.type = "button";
+    btn.id = "btnFiltrarObra";
+    btn.textContent = "Buscar/Filtrar";
+    btn.onclick = filtrarObras;
+    form.appendChild(btn);
+  }
 }
 
 async function cargarObras() {
   const res = await fetch(`${API_URL}/obras`);
   const obras = await res.json();
+  window.obrasCache = obras;
   const tbody = document.querySelector("#tablaObras tbody");
+  if (!tbody) return; // Evita error si no existe la tabla
   tbody.innerHTML = "";
   obras.forEach((o) => {
     const tr = document.createElement("tr");
@@ -283,16 +307,29 @@ async function cargarObras() {
 }
 
 // --- Ventas ---
-document.getElementById("formVenta").onsubmit = async function (e) {
-  e.preventDefault();
-  const data = Object.fromEntries(new FormData(this));
-  await fetch(`${API_URL}/ventas`, {
-    method: "POST",
-    body: new URLSearchParams(data),
-  });
-  this.reset();
-  cargarVentas();
-};
+const formVenta = document.getElementById("formVenta");
+if (formVenta) {
+  formVenta.onsubmit = async function (e) {
+    e.preventDefault();
+    const data = Object.fromEntries(new FormData(this));
+    // No modificar los IDs, se envían como string
+    try {
+      const res = await fetch(`${API_URL}/ventas`, {
+        method: "POST",
+        body: new URLSearchParams(data),
+      });
+      if (!res.ok) {
+        const error = await res.text();
+        alert("Error al registrar venta: " + error);
+      }
+    } catch (err) {
+      alert("Error de red al registrar venta: " + err);
+    }
+    this.reset();
+    cargarVentas();
+    actualizarSelectsVenta(); // Actualizar selects tras registrar venta
+  };
+}
 
 async function filtrarVentas() {
   const form = document.getElementById("formVenta");
@@ -346,26 +383,51 @@ async function filtrarVentas() {
   }
 }
 if (!document.getElementById("btnFiltrarVenta")) {
-  const btn = document.createElement("button");
-  btn.type = "button";
-  btn.id = "btnFiltrarVenta";
-  btn.textContent = "Buscar/Filtrar";
-  btn.onclick = filtrarVentas;
-  document.getElementById("formVenta").appendChild(btn);
+  const form = document.getElementById("formVenta");
+  if (form) {
+    const btn = document.createElement("button");
+    btn.type = "button";
+    btn.id = "btnFiltrarVenta";
+    btn.textContent = "Buscar/Filtrar";
+    btn.onclick = filtrarVentas;
+    form.appendChild(btn);
+  }
 }
 
 async function cargarVentas() {
   const res = await fetch(`${API_URL}/ventas`);
   const ventas = await res.json();
   const tbody = document.querySelector("#tablaVentas tbody");
+  if (!tbody) return; // Evita error si no existe la tabla
   tbody.innerHTML = "";
   ventas.forEach((v) => {
+    // Buscar nombres de cliente, agente y título de obra
+    let cliente = "";
+    let agente = "";
+    let tituloObra = "";
+    if (window.clientesCache) {
+      const c = window.clientesCache.find(
+        (cli) => cli.id_cliente === v.id_cliente
+      );
+      if (c) cliente = c.nombre;
+    }
+    if (window.agentesCache) {
+      const a = window.agentesCache.find((ag) => ag.id_agente === v.id_agente);
+      if (a) agente = a.nombre;
+    }
+    if (window.obrasCache) {
+      const o = window.obrasCache.find((ob) => ob.id_obra === v.id_obra);
+      if (o) tituloObra = o.titulo;
+    }
     const tr = document.createElement("tr");
     tr.innerHTML = `
             <td>${v.id_venta ?? ""}</td>
             <td>${v.id_obra}</td>
+            <td>${tituloObra}</td>
             <td>${v.id_cliente}</td>
+            <td>${cliente}</td>
             <td>${v.id_agente}</td>
+            <td>${agente}</td>
             <td>${v.fecha_venta}</td>
             <td>${v.precio_salida}</td>
             <td>${v.precio_final}</td>
@@ -375,18 +437,36 @@ async function cargarVentas() {
   });
 }
 
-// --- Navegación por pestañas ---
-function showTab(tab) {
-  document
-    .querySelectorAll(".tab-content")
-    .forEach((sec) => (sec.style.display = "none"));
-  document.getElementById(tab).style.display = "block";
-  document
-    .querySelectorAll(".tab-btn")
-    .forEach((btn) => btn.classList.remove("active"));
-  const idx = ["clientes", "agentes", "obras", "ventas"].indexOf(tab);
-  if (idx >= 0)
-    document.querySelectorAll(".tab-btn")[idx].classList.add("active");
+// --- Selects dinámicos para ventas ---
+async function actualizarSelectsVenta() {
+  const selectObra = document.getElementById("selectObra");
+  const selectCliente = document.getElementById("selectCliente");
+  const selectAgente = document.getElementById("selectAgente");
+  if (!selectObra || !selectCliente || !selectAgente) return; // Evita error si no existen los selects
+
+  // Obras disponibles (solo disponibles)
+  const resObras = await fetch(`${API_URL}/obras?disponible=true`);
+  const obras = await resObras.json();
+  selectObra.innerHTML = '<option value="">Seleccione Obra</option>';
+  obras.forEach((o) => {
+    selectObra.innerHTML += `<option value="${o.id_obra}">${o.titulo} (${o.artista}) [${o.id_obra}]</option>`;
+  });
+
+  // Clientes
+  const resClientes = await fetch(`${API_URL}/clientes`);
+  const clientes = await resClientes.json();
+  selectCliente.innerHTML = '<option value="">Seleccione Cliente</option>';
+  clientes.forEach((c) => {
+    selectCliente.innerHTML += `<option value="${c.id_cliente}">${c.nombre} [${c.id_cliente}]</option>`;
+  });
+
+  // Agentes
+  const resAgentes = await fetch(`${API_URL}/agentes`);
+  const agentes = await resAgentes.json();
+  selectAgente.innerHTML = '<option value="">Seleccione Agente</option>';
+  agentes.forEach((a) => {
+    selectAgente.innerHTML += `<option value="${a.id_agente}">${a.nombre} [${a.id_agente}]</option>`;
+  });
 }
 
 // Inicializar
@@ -395,5 +475,22 @@ document.addEventListener("DOMContentLoaded", () => {
   cargarAgentes();
   cargarObras();
   cargarVentas();
+  actualizarSelectsVenta(); // Poblar selects al cargar
   showTab("clientes");
 });
+
+// --- Navegación por pestañas ---
+function showTab(tab) {
+  const tabContent = document.getElementById(tab);
+  if (!tabContent) return; // Evita error si no existe la sección
+  document
+    .querySelectorAll(".tab-content")
+    .forEach((sec) => (sec.style.display = "none"));
+  tabContent.style.display = "block";
+  document
+    .querySelectorAll(".tab-btn")
+    .forEach((btn) => btn.classList.remove("active"));
+  const idx = ["clientes", "agentes", "obras", "ventas"].indexOf(tab);
+  if (idx >= 0)
+    document.querySelectorAll(".tab-btn")[idx].classList.add("active");
+}

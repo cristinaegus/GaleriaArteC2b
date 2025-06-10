@@ -2,7 +2,7 @@ from sqlalchemy import create_engine, text
 from sqlalchemy.orm import sessionmaker
 from models import Cliente, Agentegaleria, Obra, Venta
 from datetime import datetime, timedelta
-
+import uuid
 
 # URL de conexión correcta para Neon PostgreSQL
 DB_URL = "postgresql+psycopg2://GaleriaArte_owner:npg_EK2uSIDJr3OG@ep-mute-sea-a2d5a91w-pooler.eu-central-1.aws.neon.tech:5432/GaleriaArte?sslmode=require"
@@ -37,7 +37,7 @@ class GestorGaleria:
         clientes = []
         for row in result.fetchall():
             clientes.append({
-                "id_cliente": row[0],
+                "id_cliente": str(row[0]),
                 "nombre": row[1],
                 "email": row[2],
                 "telefono": row[3],
@@ -67,7 +67,7 @@ class GestorGaleria:
         agentes = []
         for row in result.fetchall():
             agentes.append({
-                "id_agente": row[0],
+                "id_agente": str(row[0]),
                 "nombre": row[1],
                 "email": row[2],
                 "telefono": row[3],
@@ -99,7 +99,7 @@ class GestorGaleria:
         obras = []
         for row in result.fetchall():
             obras.append({
-                "id_obra": row[0],
+                "id_obra": str(row[0]),
                 "titulo": row[1],
                 "artista": row[2],
                 "año": row[3],
@@ -116,9 +116,9 @@ class GestorGaleria:
         RETURNING id_venta;
         """)
         result = self.session.execute(sql, {
-            "id_obra": venta.id_obra,
-            "id_cliente": venta.id_cliente,
-            "id_agente": venta.id_agente,
+            "id_obra": str(venta.id_obra),
+            "id_cliente": str(venta.id_cliente),
+            "id_agente": str(venta.id_agente),
             "fecha_venta": venta.fecha_venta,
             "precio_salida": venta.precio_salida,
             "precio_final": venta.precio_final,
@@ -134,10 +134,10 @@ class GestorGaleria:
         ventas = []
         for row in result.fetchall():
             ventas.append({
-                "id_venta": row[0],
-                "id_obra": row[1],
-                "id_cliente": row[2],
-                "id_agente": row[3],
+                "id_venta": str(row[0]),
+                "id_obra": str(row[1]),
+                "id_cliente": str(row[2]),
+                "id_agente": str(row[3]),
                 "fecha_venta": str(row[4]),
                 "precio_salida": float(row[5]),
                 "precio_final": float(row[6]),

@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Ventas - Galería de Arte</title>
+    <link rel="stylesheet" href="/static/GaleriaCris.css" />
+    <style>
+      @import url("/static/GaleriaCris.css");
+    </style>
+  </head>
+  <body>
+    <header>
+      <nav>
+        <a class="tab-btn" href="GaleriaHome.html">Inicio</a>
+        <a class="tab-btn" href="GaleriaClientes.html">Clientes</a>
+        <a class="tab-btn" href="GaleriaAgentes.html">Agentes</a>
+        <a class="tab-btn" href="GaleriaObras.html">Obras</a>
+        <a class="tab-btn" href="GaleriaVentas.html">Ventas</a>
+      </nav>
+      <h1>Ventas</h1>
+    </header>
+    <main>
+      <!-- Sección de ventas (copiar aquí el contenido de la sección ventas de GaleriaCris.html) -->
+      <section id="ventas" class="tab-content">
+        <h2>Ventas</h2>
+        <form id="formVenta">
+          <select
+            name="id_obra"
+            id="selectObra"
+            title="ID de la obra vendida"
+            required
+          >
+            <option value="">Seleccione Obra</option>
+          </select>
+          <select
+            name="id_cliente"
+            id="selectCliente"
+            title="ID del cliente comprador"
+            required
+          >
+            <option value="">Seleccione Cliente</option>
+          </select>
+          <select
+            name="id_agente"
+            id="selectAgente"
+            title="ID del agente de la venta"
+            required
+          >
+            <option value="">Seleccione Agente</option>
+          </select>
+          <input
+            type="date"
+            name="fecha_venta"
+            placeholder="Fecha de venta"
+            title="Fecha de la venta"
+            required
+          />
+          <input
+            type="number"
+            name="precio_salida"
+            placeholder="Precio Salida"
+            title="Precio de salida"
+            step="0.01"
+            required
+          />
+          <input
+            type="number"
+            name="precio_final"
+            placeholder="Precio Final"
+            title="Precio final de venta"
+            step="0.01"
+            required
+          />
+          <input
+            type="number"
+            name="comision_agente"
+            placeholder="Comisión Agente"
+            title="Comisión del agente"
+            step="0.01"
+            required
+          />
+          <button type="submit">Registrar Venta</button>
+        </form>
+        <div id="ventasMsg" class="msg"></div>
+        <table id="tablaVentas">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>ID Obra</th>
+              <th>Título Obra</th>
+              <th>ID Cliente</th>
+              <th>Nombre Cliente</th>
+              <th>ID Agente</th>
+              <th>Nombre Agente</th>
+              <th>Fecha</th>
+              <th>Salida</th>
+              <th>Final</th>
+              <th>Comisión</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </section>
+    </main>
+    <footer>
+      <p>&copy; 2025 Galería de Arte</p>
+    </footer>
+    <script src="/static/GaleriaCris.js"></script>
+  </body>
+</html>

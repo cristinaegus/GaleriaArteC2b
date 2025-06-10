@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Clientes - Galería de Arte</title>
+    <link rel="stylesheet" href="/static/GaleriaCris.css" />
+    <style>
+      @import url("/static/GaleriaCris.css");
+    </style>
+  </head>
+  <body>
+    <header>
+      <nav>
+        <a class="tab-btn" href="GaleriaHome.html">Inicio</a>
+        <a class="tab-btn" href="GaleriaClientes.html">Clientes</a>
+        <a class="tab-btn" href="GaleriaAgentes.html">Agentes</a>
+        <a class="tab-btn" href="GaleriaObras.html">Obras</a>
+        <a class="tab-btn" href="GaleriaVentas.html">Ventas</a>
+      </nav>
+      <h1>Clientes</h1>
+    </header>
+    <main>
+      <!-- Sección de clientes (copiar aquí el contenido de la sección clientes de GaleriaCris.html) -->
+      <section id="clientes" class="tab-content">
+        <h2>Clientes</h2>
+        <form id="formCliente">
+          <input
+            type="text"
+            name="nombre"
+            placeholder="Nombre"
+            title="Nombre del cliente"
+            required
+          />
+          <input
+            type="email"
+            name="email"
+            placeholder="Email"
+            title="Correo electrónico del cliente"
+            required
+          />
+          <input
+            type="text"
+            name="telefono"
+            placeholder="Teléfono"
+            title="Teléfono del cliente"
+            required
+          />
+          <input
+            type="text"
+            name="direccion"
+            placeholder="Dirección"
+            title="Dirección del cliente"
+            required
+          />
+          <button type="submit">Agregar Cliente</button>
+        </form>
+        <div id="clientesMsg" class="msg"></div>
+        <table id="tablaClientes">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Nombre</th>
+              <th>Email</th>
+              <th>Teléfono</th>
+              <th>Dirección</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </section>
+    </main>
+    <footer>
+      <p>&copy; 2025 Galería de Arte</p>
+    </footer>
+    <script src="/static/GaleriaCris.js"></script>
+  </body>
+</html>

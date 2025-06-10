@@ -31,7 +31,7 @@ def galeria_html():
 
 @app.get("/clientes")
 def get_clientes(
-    id_cliente: int = Query(None),
+    id_cliente: str = Query(None),
     nombre: str = Query(None),
     email: str = Query(None),
     telefono: str = Query(None),
@@ -39,9 +39,8 @@ def get_clientes(
 ):
     gestor = GestorGaleria()
     clientes = gestor.get_clientes()
-    # Filtrado manual en Python (puedes optimizarlo en gestor si lo prefieres)
     if id_cliente is not None:
-        clientes = [c for c in clientes if c["id_cliente"] == id_cliente]
+        clientes = [c for c in clientes if str(c["id_cliente"]) == str(id_cliente)]
     if nombre:
         clientes = [c for c in clientes if nombre.lower() in c["nombre"].lower()]
     if email:
@@ -53,7 +52,7 @@ def get_clientes(
     return clientes
 
 @app.get("/clientes/{id_cliente}")
-def get_cliente(id_cliente: int):
+def get_cliente(id_cliente: str):
     gestor = GestorGaleria()
     return gestor.get_cliente(id_cliente)   ;
 
@@ -69,13 +68,13 @@ def create_cliente(
     return gestor.create_cliente(cliente)
 
 @app.delete("/clientes/{id_cliente}")
-def delete_cliente(id_cliente: int):
+def delete_cliente(id_cliente: str):
     gestor = GestorGaleria()
     return gestor.delete_cliente(id_cliente)
 
 @app.get("/agentes")
 def get_agentes(
-    id_agente: int = Query(None),
+    id_agente: str = Query(None),
     nombre: str = Query(None),
     email: str = Query(None),
     telefono: str = Query(None),
@@ -84,7 +83,7 @@ def get_agentes(
     gestor = GestorGaleria()
     agentes = gestor.get_agentes()
     if id_agente is not None:
-        agentes = [a for a in agentes if a["id_agente"] == id_agente]
+        agentes = [a for a in agentes if str(a["id_agente"]) == str(id_agente)]
     if nombre:
         agentes = [a for a in agentes if nombre.lower() in a["nombre"].lower()]
     if email:
@@ -107,13 +106,13 @@ def create_agente(
     return gestor.create_agente(agente)
 
 @app.delete("/agentes/{id_agente}")
-def delete_agente(id_agente: int):
+def delete_agente(id_agente: str):
     gestor = GestorGaleria()
     return gestor.delete_agente(id_agente)
 
 @app.get("/obras")
 def get_obras(
-    id_obra: int = Query(None),
+    id_obra: str = Query(None),
     titulo: str = Query(None),
     artista: str = Query(None),
     año: int = Query(None),
@@ -124,7 +123,7 @@ def get_obras(
     gestor = GestorGaleria()
     obras = gestor.get_obras()
     if id_obra is not None:
-        obras = [o for o in obras if o["id_obra"] == id_obra]
+        obras = [o for o in obras if str(o["id_obra"]) == str(id_obra)]
     if titulo:
         obras = [o for o in obras if titulo.lower() in o["titulo"].lower()]
     if artista:
@@ -164,10 +163,10 @@ def create_obra(
 
 @app.get("/ventas")
 def get_ventas(
-    id_venta: int = Query(None),
-    id_obra: int = Query(None),
-    id_cliente: int = Query(None),
-    id_agente: int = Query(None),
+    id_venta: str = Query(None),
+    id_obra: str = Query(None),
+    id_cliente: str = Query(None),
+    id_agente: str = Query(None),
     fecha_venta: str = Query(None),
     precio_salida: float = Query(None),
     precio_final: float = Query(None),
@@ -176,13 +175,13 @@ def get_ventas(
     gestor = GestorGaleria()
     ventas = gestor.get_ventas()
     if id_venta is not None:
-        ventas = [v for v in ventas if v["id_venta"] == id_venta]
+        ventas = [v for v in ventas if str(v["id_venta"]) == str(id_venta)]
     if id_obra is not None:
-        ventas = [v for v in ventas if v["id_obra"] == id_obra]
+        ventas = [v for v in ventas if str(v["id_obra"]) == str(id_obra)]
     if id_cliente is not None:
-        ventas = [v for v in ventas if v["id_cliente"] == id_cliente]
+        ventas = [v for v in ventas if str(v["id_cliente"]) == str(id_cliente)]
     if id_agente is not None:
-        ventas = [v for v in ventas if v["id_agente"] == id_agente]
+        ventas = [v for v in ventas if str(v["id_agente"]) == str(id_agente)]
     if fecha_venta:
         ventas = [v for v in ventas if fecha_venta in v["fecha_venta"]]
     if precio_salida is not None:
@@ -195,9 +194,9 @@ def get_ventas(
 
 @app.post("/ventas")
 def create_venta(
-    id_obra: int = Form(...),
-    id_cliente: int = Form(...),
-    id_agente: int = Form(...),
+    id_obra: str = Form(...),
+    id_cliente: str = Form(...),
+    id_agente: str = Form(...),
     fecha_venta: str = Form(...),
     precio_salida: float = Form(...),
     precio_final: float = Form(...),
@@ -213,7 +212,17 @@ def create_venta(
         comision_agente=comision_agente
     )
     gestor = GestorGaleria()
-    return gestor.create_venta(venta)
+    nueva_venta = gestor.create_venta(venta)
+    # Obtener los IDs disponibles
+    obras = gestor.get_obras()
+    clientes = gestor.get_clientes()
+    agentes = gestor.get_agentes()
+    return {
+        "venta": nueva_venta,
+        "ids_obras": [o["id_obra"] for o in obras],
+        "ids_clientes": [c["id_cliente"] for c in clientes],
+        "ids_agentes": [a["id_agente"] for a in agentes]
+    }
 
 @app.post("/clientes/form")
 def create_cliente_form(
@@ -252,9 +261,9 @@ def create_obra_form(
 
 @app.post("/ventas/form")
 def create_venta_form(
-    id_obra: int = Form(...),
-    id_cliente: int = Form(...),
-    id_agente: int = Form(...),
+    id_obra: str = Form(...),
+    id_cliente: str = Form(...),
+    id_agente: str = Form(...),
     fecha_venta: str = Form(...),
     precio_salida: float = Form(...),
     precio_final: float = Form(...),

@@ -5,6 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Gestión Galería de Arte</title>
     <link rel="stylesheet" href="/static/GaleriaCris.css" />
+    <style>
+      @import url("/static/GaleriaCris.css");
+    </style>
   </head>
   <body>
     <header>
@@ -177,27 +180,30 @@
       <section id="ventas" class="tab-content">
         <h2>Ventas</h2>
         <form id="formVenta">
-          <input
-            type="number"
+          <select
             name="id_obra"
-            placeholder="ID Obra"
+            id="selectObra"
             title="ID de la obra vendida"
             required
-          />
-          <input
-            type="number"
+          >
+            <option value="">Seleccione Obra</option>
+          </select>
+          <select
             name="id_cliente"
-            placeholder="ID Cliente"
+            id="selectCliente"
             title="ID del cliente comprador"
             required
-          />
-          <input
-            type="number"
+          >
+            <option value="">Seleccione Cliente</option>
+          </select>
+          <select
             name="id_agente"
-            placeholder="ID Agente"
+            id="selectAgente"
             title="ID del agente de la venta"
             required
-          />
+          >
+            <option value="">Seleccione Agente</option>
+          </select>
           <input
             type="date"
             name="fecha_venta"
@@ -237,8 +243,11 @@
             <tr>
               <th>ID</th>
               <th>ID Obra</th>
+              <th>Título Obra</th>
               <th>ID Cliente</th>
+              <th>Nombre Cliente</th>
               <th>ID Agente</th>
+              <th>Nombre Agente</th>
               <th>Fecha</th>
               <th>Salida</th>
               <th>Final</th>

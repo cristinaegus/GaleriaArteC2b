@@ -3,6 +3,7 @@
 
 from connection import get_connection
 
+
 # URL de conexión para SQLAlchemy
 DATABASE_URL = "postgresql+psycopg2://GaleriaArte_owner:npg_EK2uSIDJr3OG@ep-mute-sea-a2d5a91w-pooler.eu-central-1.aws.neon.tech:5432/GaleriaArte?sslmode=require"
 
@@ -10,10 +11,15 @@ DATABASE_URL = "postgresql+psycopg2://GaleriaArte_owner:npg_EK2uSIDJr3OG@ep-mute
 conn = get_connection()
 cursor = conn.cursor()
 
+# Crear extensión para UUID
+cursor.execute('''
+CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
+''')
+
 # Crear tablas
 cursor.execute('''
 CREATE TABLE IF NOT EXISTS Cliente (
-    id_cliente SERIAL PRIMARY KEY,
+    id_cliente UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     nombre VARCHAR(100),
     email VARCHAR(100) UNIQUE,
     telefono VARCHAR(20),
@@ -23,7 +29,7 @@ CREATE TABLE IF NOT EXISTS Cliente (
 
 cursor.execute('''
 CREATE TABLE IF NOT EXISTS AgenteGaleria (
-    id_agente SERIAL PRIMARY KEY,
+    id_agente UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     nombre VARCHAR(100),
     email VARCHAR(100) UNIQUE,
     telefono VARCHAR(20),
@@ -33,7 +39,7 @@ CREATE TABLE IF NOT EXISTS AgenteGaleria (
 
 cursor.execute('''
 CREATE TABLE IF NOT EXISTS Obra (
-    id_obra SERIAL PRIMARY KEY,
+    id_obra UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     titulo VARCHAR(200),
     artista VARCHAR(100),
     año INT,
@@ -45,10 +51,10 @@ CREATE TABLE IF NOT EXISTS Obra (
 
 cursor.execute('''
 CREATE TABLE IF NOT EXISTS Venta (
-    id_venta SERIAL PRIMARY KEY,
-    id_obra INT,
-    id_cliente INT,
-    id_agente INT,
+    id_venta UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    id_obra UUID,
+    id_cliente UUID,
+    id_agente UUID,
     fecha_venta DATE,
     precio_salida DECIMAL(10,2),
     precio_final DECIMAL(10,2),
