@@ -371,7 +371,9 @@ async function filtrarVentas() {
         if (a) agente = a.nombre;
       }
       if (window.obrasCache) {
-        const o = window.obrasCache.find((ob) => String(ob.id_obra) === String(v.id_obra));
+        const o = window.obrasCache.find(
+          (ob) => String(ob.id_obra) === String(v.id_obra)
+        );
         if (o) tituloObra = o.titulo;
       }
       const tr = document.createElement("tr");
@@ -408,7 +410,9 @@ async function filtrarVentas() {
       if (a) agente = a.nombre;
     }
     if (window.obrasCache) {
-      const o = window.obrasCache.find((ob) => String(ob.id_obra) === String(ventas.id_obra));
+      const o = window.obrasCache.find(
+        (ob) => String(ob.id_obra) === String(ventas.id_obra)
+      );
       if (o) tituloObra = o.titulo;
     }
     const tr = document.createElement("tr");
@@ -462,7 +466,9 @@ async function cargarVentas() {
       if (a) agente = a.nombre;
     }
     if (window.obrasCache) {
-      const o = window.obrasCache.find((ob) => String(ob.id_obra) === String(v.id_obra));
+      const o = window.obrasCache.find(
+        (ob) => String(ob.id_obra) === String(v.id_obra)
+      );
       if (o) tituloObra = o.titulo;
     }
     const tr = document.createElement("tr");

@@ -11,10 +11,13 @@ footer {
   box-sizing: border-box;
 }
 header {
-  background: #222;
-  color: #fff;
+  background: #8aa8c4 !important;
+  color: #1976d2 !important;
   padding: 1.2em 0.5em 0.5em 0.5em;
   text-align: center;
+}
+header h1 {
+  color: #fff !important;
 }
 nav {
   display: flex;
@@ -65,12 +68,15 @@ main {
   text-align: center;
 }
 footer {
-  background: #222;
-  color: #fff;
+  background: #8aa8c4 !important;
+  color: #1976d2 !important;
   text-align: center;
   padding: 1em 0 0.5em 0;
   margin-top: 2em;
   border-radius: 0 0 12px 12px;
+}
+footer p {
+  color: #fff !important;
 }
 table {
   width: 100%;
